@@ -221,11 +221,22 @@ How comfortable are you proceeding with using this linear model for additional a
 
 **Answer 9:**
 
+Due to the fact that environmental data is variable and R2 values of .3 are considered acceptable, I would say that I am comfortable proceeding with using this linear model with the R2 of .2. Although the histogram showed a slightly skewed distribution of residuals, I think that is is close to being normal and that the model is acceptable.
+
 **Question 10:** Now plot the data for Lake Sunapee (just like above - year on x-axis vs. ice of doy on y axis) but add the line from your regression results (e.g., fit intercept and slope). You will use the [`geom_abline`](https://ggplot2.tidyverse.org/reference/geom_abline.html).
 
 **Answer 10:**
 
 ```{r}
+sunapee |> 
+  ggplot(aes(year, ice_off_doy))+
+  geom_point()+
+  geom_line()+
+  geom_abline(intercept = coef(fit)[1], slope = coef(fit)[2],
+              color = "blue")+
+  ylab("Ice-off Day of Year")+
+  xlab("Year")+
+  ggtitle("Lake Sunapee Ice-off Days With Linear Regression")
 
 ```
 
@@ -241,7 +252,19 @@ The goal of this question is to make a forecast of the future ice-off day (with 
 **Answer 11:**
 
 ```{r}
+# Regression equation: 318.94856 - 0.10602(2040) = 102.6678
 
+quant <- quantile(sunapee$residual, c(0.05, 0.95))
+quant
+
+lower <- 102.6678 + quant[1]
+upper <- 102.6678 + quant[2]
+
+# 90% confidence interval for 2040 prediction
+c(lower, upper)
+
+# Width of 90% confidence interval for 2040 prediction
+upper - lower
 ```
 
 # Is the ice-off day of the year changing more quickly in more recent years at Lake Sunapee?
@@ -256,6 +279,43 @@ Use the skills developed above to evaluate the question "Is the ice-off day of y
 
 Use a mix of code, figures, and text to present your analysis. If you want to compare slopes, be sure they are on the same plot.
 
+Comparing slope values from early and late plots, there is a steeper slope on the late period (early slope of -0.109668 compared to the late slope of -0.3023923). The R2 values for these plots are 0.1027 and 0.2336 for early and late respectively. Based on these plots and their R2 values, we can assume with some confidence that that the ice-off day of the year has been changing more quickly in more recent years.
+
+```{r}
+# Data tidying and model fitting
+sunapee_period <- sunapee |> 
+  mutate(period = ifelse(year < 1970,
+                         "Early (before 1970)",
+                         "Late (1970 and after)"))
+
+early_fit <- lm(ice_off_doy ~ year, early)
+late_fit <- lm(ice_off_doy ~ year, late)
+
+# Early
+summary(early_fit)
+early_fit$coefficients[1]
+early_fit$coefficients[2]
+
+# Late
+summary(late_fit)
+late_fit$coefficients[1]
+late_fit$coefficients[2]
+
+
+# Plot
+sunapee_period |> 
+  ggplot(aes(year, ice_off_doy))+
+  geom_point()+
+  geom_line()+
+  geom_smooth(method = "lm", se = FALSE)+
+  facet_wrap(facets = "period", scales = "free_x")+
+  ylab("Ice-off Day of Year")+
+  xlab("Year")+
+  ggtitle("Lake Sunapee Ice-off Days")
+
+
+```
+
 # Rendering and committing
 
 Remember to Render your document as HTML and comment+push to GitHub your code and rendered HTML that was created when you rendered the document. Your GitHub repository should have multiple commits with informative commit messages.
@@ -267,3 +327,5 @@ This module was initially developed as an Excel-based activity by Carey, C.C., J
 # Attribution
 
 Include citation of any AI-generated assistance or discussion with classmates (per policy in syllabus). Proper documentation of AI-generated assistance includes the prompt, the source (e.g., ChatGPT), and the significant parts of the response. Proper documentation of discussion with classmates include listing their names and the components discussed.
+
+External source used: <https://static-bcrf.biochem.wisc.edu/courses/Tabular-data-analysis-with-R-and-Tidyverse/book/10-dplyrdatamanipulation.html#dplyrmutatedata>
