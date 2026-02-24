@@ -199,6 +199,8 @@ Based on the `summary()` above, what is the p-value for the slope?
 
 **Answer 7:**
 
+The summary shows a p-value of 2.504e-09. This provides strong evidence that we can reject the null hypothesis that the slope is 0, meaning year is significantly related to ice-off date.
+
 ## The slope physically meaningful
 
 A slope value could have a low probability of being 0 (thus we have a strong belief that it is not zero), but the magnitude of change is functionally meaningless in the physical world (i.e., the rate of change is so small that we would not think much of it). This can occur particularly when analyzing large datasets.
@@ -208,6 +210,8 @@ A slope value could have a low probability of being 0 (thus we have a strong bel
 Based on the slope value, how many more years are needed to pass before the lake has a 1 week change in ice off doy? Do you think this is meaningful? Why?
 
 **Answer 8:**
+
+Using the slope of -0.106, we can estimate that it will take 66 years (7/0.106 = 66) to see a one week change in ice-off day of year. I would say that this result is meaningful for the environment. Specifically, such a change in water temperature could increase algal productivity and result in less dissolved oxygen, which can be harmful for aquatic life.
 
 ## Overall model assessment
 
