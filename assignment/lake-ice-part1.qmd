@@ -287,6 +287,11 @@ sunapee_period <- sunapee |>
   mutate(period = ifelse(year < 1970,
                          "Early (before 1970)",
                          "Late (1970 and after)"))
+early <- sunapee_period |> 
+  filter(year < 1970)
+
+late <- sunapee_period |> 
+  filter(year >= 1970)
 
 early_fit <- lm(ice_off_doy ~ year, early)
 late_fit <- lm(ice_off_doy ~ year, late)
@@ -312,7 +317,6 @@ sunapee_period |>
   ylab("Ice-off Day of Year")+
   xlab("Year")+
   ggtitle("Lake Sunapee Ice-off Days")
-
 
 ```
 
