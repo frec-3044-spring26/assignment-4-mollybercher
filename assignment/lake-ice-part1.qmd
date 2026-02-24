@@ -131,6 +131,8 @@ What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` 
 
 **Answer 4:**
 
+The R2 for the regression is 0.2055. Although this R2is not very high, environmental data often results in smaller R2 values, so we can say this is a moderate correlation.
+
 ## Residuals normally distributed
 
 Second, it is important that the residuals from our linear model are normally distributed. The following is a normal distribution that you can visually compare to:
@@ -161,7 +163,13 @@ Use the [`add_predictions()`](https://modelr.tidyverse.org/reference/add_predict
 **Answer 5:**
 
 ```{r}
+library(modelr)
 
+sunapee <- sunapee |> 
+  add_predictions(fit) |> 
+  add_residuals(fit)
+
+head(sunapee)
 ```
 
 Now, to visualize the residuals, use `geom_histogram()` to plot them as a histogram. I recommend using a bin width of 10 in the histogram.
@@ -172,8 +180,13 @@ Show Histogram and answer the following question: do the residuals meet the assu
 
 **Answer 6:**
 
-```{r}
+The histogram below shows residuals that are slightly left skewed, which can be seen using 20 bins similar to the normal distribution above. Using a bin width of 10, it is a little bit more difficult to see this skew. I would say that these residuals do not meet the assumptions of the liner regression.
 
+```{r}
+sunapee |> 
+  ggplot(aes(residual))+
+  geom_histogram(binwidth = 10)+
+  ggtitle("Residuals of Sunapee Linear Model")
 ```
 
 ## The slope is different from zero
