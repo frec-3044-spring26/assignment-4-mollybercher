@@ -49,7 +49,8 @@ We will practice key skills in the module using a focal lake. Use the `filter` f
 library(tidyverse)
 
 sunapee <- ice_data |> 
-  filter(lake_name == "Sunapee")
+  filter(lake_name == "Sunapee") |> 
+  mutate(ice_off_doy = as.numeric(ice_off_doy))
   
 ```
 
@@ -66,7 +67,15 @@ Be sure that the title, x-axis, and y-axis labels are clearly labeled.
 **Answer 1:**
 
 ```{r}
+theme_set(theme_classic())
 
+sunapee |> 
+  ggplot(aes(year, ice_off_doy))+
+  geom_point()+
+  geom_line()+
+  ylab("Ice-off Day of Year")+
+  xlab("Year")+
+  ggtitle("Lake Sunapee Ice-off Days")
 ```
 
 # How does ice cover change over time at Lake Sunapee?
@@ -79,18 +88,20 @@ What do you expect the sign (plus, minus, or no change) to be for the slope of t
 
 **Answer 2:**
 
+I expect to see a negative slope on the linear model because recent years have show lower ice-off days than at the beginning of the data.
+
 Use the `lm` function to predict `ice_off_doy` as a function (`~`) of the year for the data.frame called `sunapee`. You can learn more about the `lm` function [here](https://www.datacamp.com/tutorial/linear-regression-R)
 
 Create an object called `fit` that contains the results of the linear model.
 
 ```{r}
-
+fit <- lm(ice_off_doy ~ year, sunapee)
 ```
 
 Then, use the function `summary` to explore the result of the `lm` function.
 
 ```{r}
-
+summary(fit)
 ```
 
 The results of your linear model are in an object named `fit`, so you can find the regression coefficients at `fit$coefficients[1]` (the intercept) and `fit$coefficients[2]` (the slope). Confirm that `fit$coefficients[1]` and `fit$coefficients[2]` match the values expected from the summary command you ran above.
@@ -105,6 +116,8 @@ fit$coefficients[2]
 What is the direction of the slope? How does this match your expectations from Question 2?
 
 **Answer 3:**
+
+As predicted in question 2, the slope of this linear model is negative. I am a little bit surprised how small the slope is, although it makes sense considering that changes in the plot from question 1 are not very large.
 
 # Is our model any good?
 
